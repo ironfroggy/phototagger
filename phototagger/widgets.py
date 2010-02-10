@@ -53,6 +53,7 @@ class PhotoBoxWidget(widgets.Select):
                         box: %(box)s,
                         force_width: %(force_width)s,
                         force_height: %(force_height)s,
+                        force_aspect: %(force_aspect)s
                     });
                 });
             </script>
@@ -66,4 +67,5 @@ class PhotoBoxWidget(widgets.Select):
                 'box': json.dumps(box_data),
                 'force_width': self.attrs['force_width'] or 'null',
                 'force_height': self.attrs['force_height'] or 'null',
+                'force_aspect': ('"%d:%s"' % self.attrs['force_aspect']) if self.attrs['force_aspect'] else 'null',
             })

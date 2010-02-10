@@ -115,13 +115,20 @@
                 success: function(data) {
                     widget.photo_id = photo_id
                     widget.img.attr('src', data);
+                    var default_width = 100;
+                    var default_height = 100;
+                    if (widget.options.force_aspect) {
+                        var ratio_w = parseInt(widget.options.force_aspect.split(':')[0]);
+                        var ratio_h = parseInt(widget.options.force_aspect.split(':')[1]);
+                        default_height = default_width * (ratio_h / ratio_w);
+                    }
                     var imgarea_options = {
                         enable: true,
                         x1: widget.options.box.x || 0,
                         y1: widget.options.box.y || 0,
-                        x2: widget.options.box.x + widget.options.box.width || widget.options.force_width || 100,
-                        y2: widget.options.box.y + widget.options.box.height || widget.options.force_height || 100,
-                        onSelectChange: function(i,a){widget.updateBox(a);}
+                        x2: widget.options.box.x + widget.options.box.width || widget.options.force_width || default_width,
+                        y2: widget.options.box.y + widget.options.box.height || widget.options.force_height || default_height,
+                        onSelectEnd: function(i,a){widget.updateBox(a);}
                     };
                     if (widget.options.force_width) {
                         $.extend(imgarea_options, {
@@ -129,6 +136,10 @@
                             minWidth: widget.options.force_width,
                             maxHeight: widget.options.force_height,
                             minHeight: widget.options.force_height
+                        });
+                    } else if (widget.options.force_aspect) {
+                        $.extend(imgarea_options, {
+                            aspectRatio: widget.options.force_aspect
                         });
                     }
                     imgarea_options
