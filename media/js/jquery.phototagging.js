@@ -75,6 +75,9 @@
         _init: function() {
             var widget = this;
             var element = this.element;
+            if (widget.options.box.id) {
+                widget.box_id = widget.options.box.id;
+            }
 
             this.img = element.next('img');
             widget.updateImage(element.val());
@@ -109,11 +112,17 @@
                 success: function(data) {
                     widget.photo_id = photo_id
                     widget.img.attr('src', data);
-                    widget.img.imgAreaSelect({
+                    var imgarea_options = {
                         enable: true,
-                        x1: 0, y1: 0, x2: 100, y2: 100,
+                        x1: widget.options.box.x || 0,
+                        y1: widget.options.box.y || 0,
+                        x2: widget.options.box.x + widget.options.box.width || 100,
+                        y2: widget.options.box.y + widget.options.box.height || 100,
                         onSelectChange: function(i,a){widget.updateBox(a);}
-                    });
+                    };
+                    console.log(widget.options.box);
+                    console.log(imgarea_options);
+                    widget.img.imgAreaSelect(imgarea_options);
                 }
             });
         }
