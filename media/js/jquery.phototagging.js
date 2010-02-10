@@ -77,6 +77,7 @@
             var element = this.element;
             if (widget.options.box.id) {
                 widget.box_id = widget.options.box.id;
+                element.val(widget.box_id);
             }
 
             this.img = element.next('img');
@@ -88,6 +89,7 @@
         },
         updateBox: function(area) {
             var widget = this;
+            var element = this.element;
             console.log("creating box", widget.photo_id);
 
             data = {x: area.x1, y: area.y1, width: area.width, height: area.height};
@@ -99,6 +101,7 @@
                 data,
                 function(data) {
                     widget.box_id = data;
+                    element.parent().find('[type=hidden]').val(data);
                     console.log("Created new box", data);
                 }
             );
