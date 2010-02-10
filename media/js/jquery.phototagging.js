@@ -119,10 +119,19 @@
                         enable: true,
                         x1: widget.options.box.x || 0,
                         y1: widget.options.box.y || 0,
-                        x2: widget.options.box.x + widget.options.box.width || 100,
-                        y2: widget.options.box.y + widget.options.box.height || 100,
+                        x2: widget.options.box.x + widget.options.box.width || widget.options.force_width || 100,
+                        y2: widget.options.box.y + widget.options.box.height || widget.options.force_height || 100,
                         onSelectChange: function(i,a){widget.updateBox(a);}
                     };
+                    if (widget.options.force_width) {
+                        $.extend(imgarea_options, {
+                            maxWidth: widget.options.force_width,
+                            minWidth: widget.options.force_width,
+                            maxHeight: widget.options.force_height,
+                            minHeight: widget.options.force_height
+                        });
+                    }
+                    imgarea_options
                     console.log(widget.options.box);
                     console.log(imgarea_options);
                     widget.img.imgAreaSelect(imgarea_options);

@@ -51,6 +51,8 @@ class PhotoBoxWidget(widgets.Select):
                         ajaxGetImageURL: "%(get_image_url)s",
                         ajaxAddPhotoBoxURL: "%(add_photo_box_url)s",
                         box: %(box)s,
+                        force_width: %(force_width)s,
+                        force_height: %(force_height)s,
                     });
                 });
             </script>
@@ -62,4 +64,6 @@ class PhotoBoxWidget(widgets.Select):
                 'box_field': box_field,
                 'img_select': img_select,
                 'box': json.dumps(box_data),
+                'force_width': self.attrs['force_width'] or 'null',
+                'force_height': self.attrs['force_height'] or 'null',
             })
