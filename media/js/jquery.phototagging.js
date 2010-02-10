@@ -83,6 +83,23 @@
                 widget.updateImage(photo_id);
             });
         },
+        updateBox: function(area) {
+            var widget = this;
+            console.log("creating box", widget.photo_id);
+
+            data = {x: area.x1, y: area.y1, width: area.width, height: area.height};
+            if (typeof widget.box_id != 'undefined') {
+                data['id'] = widget.box_id;
+            }
+            $.post(
+                this.options.ajaxAddPhotoBoxURL.replace('${photo_id}', widget.photo_id.toString()),
+                data,
+                function(data) {
+                    widget.box_id = data;
+                    console.log("Created new box", data);
+                }
+            );
+        },
         updateImage: function(photo_id) {
             var widget = this;
             var element = this.element;
@@ -90,7 +107,13 @@
             $.ajax({
                 url: this.options.ajaxGetImageURL + photo_id,
                 success: function(data) {
+                    widget.photo_id = photo_id
                     widget.img.attr('src', data);
+                    widget.img.imgAreaSelect({
+                        enable: true,
+                        x1: 0, y1: 0, x2: 100, y2: 100,
+                        onSelectChange: function(i,a){widget.updateBox(a);}
+                    });
                 }
             });
         }

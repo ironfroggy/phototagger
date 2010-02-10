@@ -1,0 +1,2 @@
+django-tagging
+-e git://github.com/pinax/pinax.git#egg=pinax

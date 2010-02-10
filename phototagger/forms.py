@@ -1,5 +1,6 @@
 from django import forms
 
+from photos.models import Image
 from phototagger.models import PhotoBox
 
 class PhotoBoxForm(forms.ModelForm):
@@ -13,7 +14,7 @@ class PhotoBoxForm(forms.ModelForm):
     photo = forms.ModelChoiceField(Image, required=False, widget=forms.HiddenInput())
 
     def __init__(self, id, *args, **kwargs):
-        super(PhotoTagForm, self).__init__(*args, **kwargs)
+        super(PhotoBoxForm, self).__init__(*args, **kwargs)
         self.id = id
 
     def clean_photo(self):

@@ -86,4 +86,5 @@ INSTALLED_APPS = (
     'photologue',
     'photos',
     'phototagger',
+    'phototagger_demo',
 )

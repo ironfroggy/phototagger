@@ -6,7 +6,7 @@ from phototagger.widgets import PhotoBoxWidget
 
 class AThingWithACroppedPhoto(models.Model):
 
-    cropped_photo = PhotoBoxField(Image)
+    cropped_photo = PhotoBoxField()
 
 
 from django import forms
