@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.safestring import mark_safe
 
 from photos.models import Image
 
@@ -14,3 +15,11 @@ class PhotoBox(models.Model):
     height = models.IntegerField()
 
 
+    def __unicode__(self):
+        return mark_safe('''<img src="%(src)s" style="position: absolute; clip:rect(%(top)dpx, %(right)dpx, %(bottom)dpx, %(left)dpx); top: -%(top)dpx; left: -%(left)dpx;" />''' % {
+            'src': self.photo.get_display_url(),
+            'top': self.y,
+            'right': self.x + self.width,
+            'bottom': self.y + self.height,
+            'left': self.x,
+        })

@@ -16,3 +16,4 @@ class PhotoBoxField(models.ForeignKey):
         return super(PhotoBoxField, self).formfield(*args, **kwargs)
 
 
+
