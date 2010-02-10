@@ -111,7 +111,7 @@
             var element = this.element;
 
             $.ajax({
-                url: this.options.ajaxGetImageURL + photo_id,
+                url: this.options.ajaxGetImageURL.replace('${photo_id}', photo_id),
                 success: function(data) {
                     widget.photo_id = photo_id
                     widget.img.attr('src', data);

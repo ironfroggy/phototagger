@@ -56,7 +56,7 @@ class PhotoBoxWidget(widgets.Select):
             </script>
         </span>''' % {
                 'selectid': name,
-                'get_image_url': reverse('phototagger-get_image_url', args=(12345,)).replace('12345/', ''),
+                'get_image_url': reverse('phototagger-get_image_url', args=(12345,)).replace('12345/', '${photo_id}'),
                 'add_photo_box_url': reverse('phototagger-add_box', args=(12345,)).replace('12345', '${photo_id}'),
                 'media': mark_safe(unicode(self.media)),
                 'box_field': box_field,
