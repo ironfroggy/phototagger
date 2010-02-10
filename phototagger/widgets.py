@@ -23,7 +23,7 @@ class PhotoBoxWidget(widgets.Select):
 
     def render(self, name, value, attrs=None):
         box_field = widgets.HiddenInput().render(name, value)
-        value = 38
+
         if value:
             box = get_model('phototagger', 'PhotoBox').objects.get(id=int(value))
             photo_value = box.photo.id
