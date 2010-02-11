@@ -73,6 +73,7 @@
 
     $.widget('ui.photoSelectAndTag', {
         _init: function() {
+            console.log("photoSelectAndTag()");
             var widget = this;
             var element = this.element;
             if (widget.options.box.id) {
@@ -150,5 +151,61 @@
             });
         }
     });
+
+    $.fn.fitClippedImage = function fitClippedImage() {
+        var img = this;
+
+        function get_clip() {
+            var values = img.css('clip').match(/\d+/g);
+            return {
+                'top': values[0],
+                'right': values[1],
+                'bottom': values[2],
+                'left': values[3]
+            }
+        }
+
+        function set_clip(clip) {
+            console.log(clip);
+            img.css('clip', 'rect('+clip.top+'px, '+clip.right+'px, '+clip.bottom+'px, '+clip.left+'px)');
+        }
+
+        function adjust_dimension(dimension) {
+            var desired = img.css(dimension).match(/\d+/)[0];
+            var clip = get_clip();
+
+            if (dimension == 'height') {
+                var original = img[0].naturalHeight;
+                var fixed = desired / ( (clip.bottom - clip.top) / original );
+            } else {
+                var original = img[0].naturalWidth;
+                var fixed = desired / ( (clip.right - clip.left) / original );
+            }
+
+
+            img.css(dimension, fixed);
+
+            if (dimension == 'height') {
+                clip.bottom = parseInt(clip.top) + parseInt(desired);
+            } else {
+                clip.right = parseInt(clip.left) + parseInt(desired);
+            }
+            set_clip(clip);
+        }
+
+        adjust_dimension('width');
+        adjust_dimension('height');
+
+        var pos = img.position();
+        var clip = get_clip();
+
+        pos.top = pos.top - clip.top;
+        pos.left = pos.left - clip.left;
+        img.css({
+            top: pos.top + 'px',
+            left: pos.left + 'px'
+        });
+
+    };
 
 })(jQuery);

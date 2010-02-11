@@ -16,10 +16,14 @@ class PhotoBox(models.Model):
 
 
     def __unicode__(self):
-        return mark_safe('''<img src="%(src)s" style="position: absolute; clip:rect(%(top)dpx, %(right)dpx, %(bottom)dpx, %(left)dpx); top: -%(top)dpx; left: -%(left)dpx;" />''' % {
+        w, h = self.photo.get_display_size()
+
+        return mark_safe('''<img src="%(src)s" style="position: absolute; clip:rect(%(top)dpx, %(right)dpx, %(bottom)dpx, %(left)dpx);" class="clipexpand"/>''' % {
             'src': self.photo.get_display_url(),
             'top': self.y,
-            'right': self.x + self.width,
-            'bottom': self.y + self.height,
+            'right': self.width + self.x,
+            'bottom': self.height + self.y,
             'left': self.x,
+            'pos_top': -self.y,
+            'pos_left': -self.x,
         })
