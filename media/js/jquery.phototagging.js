@@ -73,7 +73,6 @@
 
     $.widget('ui.photoSelectAndTag', {
         _init: function() {
-            console.log("photoSelectAndTag()");
             var widget = this;
             var element = this.element;
             if (widget.options.box.id) {
@@ -81,19 +80,28 @@
                 element.val(widget.box_id);
             }
 
-            this.img = element.next('img');
+            this.img = element.parent().find('img');
             widget.updateImage(element.val());
             element.change(function(){
                 var photo_id = element.val();
                 widget.updateImage(photo_id);
             });
+
+            this.button = element.parent().find('[name=pb_toggle]');
+            this.button.click(function(){
+                var jcrop = element.parent().find('.jcrop-holder');
+                jcrop.toggle();
+            });
+            element.parent().find('select').change(function(){
+                element.parent().find('.jcrop-holder').show();
+            });
         },
         updateBox: function(area) {
             var widget = this;
             var element = this.element;
-            console.log("creating box", widget.photo_id);
+            widget.area = area;
 
-            data = {x: area.x1, y: area.y1, width: area.width, height: area.height};
+            data = {x: area.x, y: area.y, width: area.w, height: area.h};
             if (typeof widget.box_id != 'undefined') {
                 data['id'] = widget.box_id;
             }
@@ -103,13 +111,21 @@
                 function(data) {
                     widget.box_id = data;
                     element.parent().find('[type=hidden]').val(data);
-                    console.log("Created new box", data);
                 }
             );
         },
         updateImage: function(photo_id) {
             var widget = this;
             var element = this.element;
+
+            if (typeof widget.jcrop_api != 'undefined') {
+                element.parent().find('.jcrop-holder').remove();
+                element.parent().find('img').after('<img class="phototagger_image" src="" />');
+                element.parent().find('img:first').remove();
+                widget.img = element.parent().find('img');
+                widget.changing = true;
+                delete widget.jcrop_api;
+            }
 
             $.ajax({
                 url: this.options.ajaxGetImageURL.replace('${photo_id}', photo_id),
@@ -119,34 +135,33 @@
                     var default_width = 100;
                     var default_height = 100;
                     if (widget.options.force_aspect) {
-                        var ratio_w = parseInt(widget.options.force_aspect.split(':')[0]);
-                        var ratio_h = parseInt(widget.options.force_aspect.split(':')[1]);
-                        default_height = default_width * (ratio_h / ratio_w);
+                        default_height = default_width * widget.options.force_aspect;
                     }
-                    var imgarea_options = {
-                        enable: true,
-                        x1: widget.options.box.x || 0,
-                        y1: widget.options.box.y || 0,
-                        x2: widget.options.box.x + widget.options.box.width || widget.options.force_width || default_width,
-                        y2: widget.options.box.y + widget.options.box.height || widget.options.force_height || default_height,
-                        onSelectEnd: function(i,a){widget.updateBox(a);}
+
+                    function update_widget(c) {
+                        widget.updateBox(c);
                     };
-                    if (widget.options.force_width) {
-                        $.extend(imgarea_options, {
-                            maxWidth: widget.options.force_width,
-                            minWidth: widget.options.force_width,
-                            maxHeight: widget.options.force_height,
-                            minHeight: widget.options.force_height
-                        });
-                    } else if (widget.options.force_aspect) {
-                        $.extend(imgarea_options, {
+
+                    var jcrop_options = {
+                        onSelect: update_widget,
+                        setSelect: [widget.options.box.x,
+                                    widget.options.box.y,
+                                    widget.options.box.x + widget.options.box.width,
+                                    widget.options.box.y + widget.options.box.height]
+                    };
+                    // Setup aspect ratio options
+                    if (widget.options.force_aspect) {
+                        $.extend(jcrop_options, {
                             aspectRatio: widget.options.force_aspect
                         });
                     }
-                    imgarea_options
-                    console.log(widget.options.box);
-                    console.log(imgarea_options);
-                    widget.img.imgAreaSelect(imgarea_options);
+
+                    widget.jcrop_api = widget.img.Jcrop(jcrop_options);
+                    if (!widget.changing) {
+                        setTimeout(function(){widget.img.parent().find('.jcrop-holder').hide()}, 500);
+                    } else {
+                        widget.changing = false;
+                    }
                 }
             });
         }
@@ -166,7 +181,6 @@
         }
 
         function set_clip(clip) {
-            console.log(clip);
             img.css('clip', 'rect('+clip.top+'px, '+clip.right+'px, '+clip.bottom+'px, '+clip.left+'px)');
         }
 

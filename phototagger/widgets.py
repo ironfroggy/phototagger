@@ -12,8 +12,7 @@ class PhotoBoxWidget(widgets.Select):
         js = (
             getattr(settings, 'MEDIA_JQUERY_URL', 'http://ajax.googleapis.com/ajax/libs/jquery/1.2.6/jquery.min.js'),
             getattr(settings, 'MEDIA_JQUERY_UI_URL', 'js/jquery-ui.min.js'),
-            getattr(settings, 'MEDIA_IMGAREASELECT_URL', 'js/jquery.imgareaselect-0.4.js'),
-            getattr(settings, 'MEDIA_IMGNOTES_URL', 'js/jquery.imgnotes-0.2.js'),
+            settings.MEDIA_URL + 'js/jquery.Jcrop.min.js',
             settings.MEDIA_URL + 'js/jquery.phototagging.js',
         )
 
@@ -44,6 +43,7 @@ class PhotoBoxWidget(widgets.Select):
             %(media)s
             %(box_field)s
             %(img_select)s
+            <input type="button" name="pb_toggle" value="+"></input>
             <img class="phototagger_image" src="" />
             <script type="text/javascript">
                 $(document).ready(function(){
@@ -51,8 +51,6 @@ class PhotoBoxWidget(widgets.Select):
                         ajaxGetImageURL: "%(get_image_url)s",
                         ajaxAddPhotoBoxURL: "%(add_photo_box_url)s",
                         box: %(box)s,
-                        force_width: %(force_width)s,
-                        force_height: %(force_height)s,
                         force_aspect: %(force_aspect)s
                     });
                 });
@@ -65,7 +63,5 @@ class PhotoBoxWidget(widgets.Select):
                 'box_field': box_field,
                 'img_select': img_select,
                 'box': json.dumps(box_data),
-                'force_width': self.attrs['force_width'] or 'null',
-                'force_height': self.attrs['force_height'] or 'null',
-                'force_aspect': ('"%d:%s"' % self.attrs['force_aspect']) if self.attrs['force_aspect'] else 'null',
+                'force_aspect': (int.__div__(*self.attrs['force_aspect'])) if self.attrs['force_aspect'] else 'null',
             })

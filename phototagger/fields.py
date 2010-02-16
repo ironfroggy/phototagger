@@ -5,8 +5,8 @@ from phototagger.widgets import PhotoBoxWidget
 
 class PhotoBoxField(models.ForeignKey):
 
-    def __init__(self, force_width=None, force_height=None, force_aspect=None):
-        super(PhotoBoxField, self).__init__('phototagger.PhotoBox')
+    def __init__(self, force_width=None, force_height=None, force_aspect=None, **kwargs):
+        super(PhotoBoxField, self).__init__('phototagger.PhotoBox', **kwargs)
         self.force_width = force_width
         self.force_height = force_height
         self.force_aspect = force_aspect
