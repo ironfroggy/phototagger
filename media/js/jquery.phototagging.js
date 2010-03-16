@@ -95,6 +95,26 @@
             element.parent().find('select').change(function(){
                 element.parent().find('.jcrop-holder').show();
             });
+
+            if (widget.options.read_aspect_h && widget.options.read_aspect_w) {
+                var aspect_width;
+                var aspect_height;
+                $(widget.options.read_aspect_h).change(function(){
+                    aspect_height = $(this).val();
+                    update_aspect_option();
+                });
+                $(widget.options.read_aspect_w).change(function(){
+                    aspect_width = $(this).val();
+                    update_aspect_option();
+                });
+                function update_aspect_option() {
+                    if (typeof widget.jcrop_api != 'undefined') {
+                        widget.options.force_aspect = aspect_width / aspect_height; 
+                        widget.jcrop_api.setOptions(widget.options);
+                        widget.updateImage(widget.photo_id);
+                    }
+                };
+            }
         },
         updateBox: function(area) {
             var widget = this;
@@ -156,7 +176,7 @@
                         });
                     }
 
-                    widget.jcrop_api = widget.img.Jcrop(jcrop_options);
+                    widget.jcrop_api = $.Jcrop(widget.img, jcrop_options);
                     if (!widget.changing) {
                         setTimeout(function(){widget.img.parent().find('.jcrop-holder').hide()}, 500);
                     } else {

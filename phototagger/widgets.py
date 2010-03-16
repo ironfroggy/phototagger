@@ -50,7 +50,9 @@ class PhotoBoxWidget(widgets.Select):
                         ajaxGetImageURL: "%(get_image_url)s",
                         ajaxAddPhotoBoxURL: "%(add_photo_box_url)s",
                         box: %(box)s,
-                        force_aspect: %(force_aspect)s
+                        force_aspect: %(force_aspect)s,
+                        read_aspect_h: %(read_aspect_h)s,
+                        read_aspect_w: %(read_aspect_w)s
                     });
                 });
             </script>
@@ -63,4 +65,6 @@ class PhotoBoxWidget(widgets.Select):
                 'img_select': img_select,
                 'box': json.dumps(box_data),
                 'force_aspect': (int.__div__(*self.attrs['force_aspect'])) if self.attrs['force_aspect'] else 'null',
+                'read_aspect_h': json.dumps(self.attrs['read_aspect_h']),
+                'read_aspect_w': json.dumps(self.attrs['read_aspect_w']),
             })
