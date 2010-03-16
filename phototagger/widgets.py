@@ -10,7 +10,7 @@ import json
 class PhotoBoxWidget(widgets.Select):
     class Media:
         js = (
-            getattr(settings, 'MEDIA_JQUERY_URL', 'http://ajax.googleapis.com/ajax/libs/jquery/1.2.6/jquery.min.js'),
+            getattr(settings, 'MEDIA_JQUERY_URL', 'http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js'),
             getattr(settings, 'MEDIA_JQUERY_UI_URL', 'js/jquery-ui.min.js'),
             settings.MEDIA_URL + 'js/jquery.Jcrop.min.js',
             settings.MEDIA_URL + 'js/jquery.phototagging.js',
@@ -40,7 +40,6 @@ class PhotoBoxWidget(widgets.Select):
         img_select = widgets.Select().render(name + '__img_select', photo_value, attrs, choices=photo_choices)
         return  mark_safe(u'''
         <span class="photoboxfield">
-            %(media)s
             %(box_field)s
             %(img_select)s
             <input type="button" name="pb_toggle" value="+"></input>

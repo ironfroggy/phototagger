@@ -196,8 +196,10 @@
                 var fixed = desired / ( (clip.right - clip.left) / original );
             }
 
-
+            // Under some conditions, changing width/height changes the other
+            var other_original = (dimension == 'width' && img.css('height')) || img.css('width');
             img.css(dimension, fixed);
+            (dimension == 'width' && img.css('height', other_original)) || img.css('width', other_original)
 
             if (dimension == 'height') {
                 clip.bottom = parseInt(clip.top) + parseInt(desired);
