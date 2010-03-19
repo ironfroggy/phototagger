@@ -19,15 +19,15 @@ class PhotoBox(models.Model):
         w, h = self.photo.get_display_size()
         return self.render_img()
 
-    def render_img(self, w=None, h=None):
-        if h is None and w is None:
-            hw = ''
-        else:
-            hw = "height: %(height)spx; width: %(width)spx;" % {
-                'height': self.height,
-                'width': self.width,
-            }
-        return mark_safe('''<img src="%(src)s" style="position: absolute; %(hw)s clip:rect(%(top)dpx, %(right)dpx, %(bottom)dpx, %(left)dpx);" class="clipexpand"/>''' % {
+    def render_img(self, width=None, height=None, extra=''):
+        if height is None and width is None:
+            height = self.height
+            width = self.width
+        hw = "height: %(height)spx; width: %(width)spx;" % {
+            'height': height,
+            'width': width,
+        }
+        return mark_safe('''<img src="%(src)s" style="position: absolute; %(hw)s clip:rect(%(top)dpx, %(right)dpx, %(bottom)dpx, %(left)dpx);" class="clipexpand" %(extra)s />''' % {
             'src': self.photo.get_display_url(),
             'top': self.y,
             'right': self.width + self.x,
@@ -36,6 +36,7 @@ class PhotoBox(models.Model):
             'pos_top': -self.y,
             'pos_left': -self.x,
             'hw': hw,
+            'extra': extra,
         })
 
 
