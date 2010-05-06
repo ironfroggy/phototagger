@@ -16,18 +16,21 @@ class PhotoBox(models.Model):
 
 
     def __unicode__(self):
-        w, h = self.photo.get_display_size()
-        return self.render_img()
+        return self.render_img('auto')
 
     def render_img(self, width=None, height=None, extra=''):
         if height is None and width is None:
             height = self.height
             width = self.width
-        hw = "height: %(height)spx; width: %(width)spx;" % {
-            'height': height,
-            'width': width,
-        }
-        return mark_safe('''<img src="%(src)s" style="position: absolute; %(hw)s clip:rect(%(top)dpx, %(right)dpx, %(bottom)dpx, %(left)dpx);" class="clipexpand" %(extra)s />''' % {
+        if width == 'auto':
+            hw = ''
+        else:
+            hw = "height: %(height)spx; width: %(width)spx;" % {
+                'height': height,
+                'width': width,
+            }
+        real_w, real_h = self.photo.get_display_size()
+        return mark_safe('''<img src="%(src)s" style="position: absolute; %(hw)s clip:rect(%(top)dpx %(right)dpx %(bottom)dpx %(left)dpx);" class="clipexpand" data-real-width="%(real_w)d" data-real-height="%(real_h)d" %(extra)s />''' % {
             'src': self.photo.get_display_url(),
             'top': self.y,
             'right': self.width + self.x,
@@ -36,6 +39,8 @@ class PhotoBox(models.Model):
             'pos_top': -self.y,
             'pos_left': -self.x,
             'hw': hw,
+            'real_w': real_w,
+            'real_h': real_h,
             'extra': extra,
         })
 

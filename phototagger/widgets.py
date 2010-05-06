@@ -18,6 +18,7 @@ class PhotoBoxWidget(widgets.Select):
 
         css = {'all': (
             getattr(settings, 'MEDIA_PHOTOTAGGER_CSS_URL', 'css/phototagger.css'),
+            getattr(settings, 'MEDIA_PHOTOTAGGER_CSS_URL', 'css/jquery.Jcrop.css'),
         )}
 
     def render(self, name, value, attrs=None):
@@ -36,7 +37,8 @@ class PhotoBoxWidget(widgets.Select):
         else:
             box_data = {}
             photo_value = ''
-        photo_choices = ((str(p.id), p.title) for p in get_model('photos', 'Image').objects.all())
+        photo_choices = [(str(p.id), p.title) for p in get_model('photos', 'Image').objects.all()]
+        photo_choices.insert(0, ('', '(None)'))
         img_select = widgets.Select().render(name + '__img_select', photo_value, attrs, choices=photo_choices)
         return  mark_safe(u'''
         <span class="photoboxfield">
@@ -64,7 +66,7 @@ class PhotoBoxWidget(widgets.Select):
                 'box_field': box_field,
                 'img_select': img_select,
                 'box': json.dumps(box_data),
-                'force_aspect': (int.__div__(*self.attrs['force_aspect'])) if self.attrs['force_aspect'] else 'null',
+                'force_aspect': (float(self.attrs['force_aspect'][1]) / float(self.attrs['force_aspect'][0])) if self.attrs['force_aspect'] else 'null',
                 'read_aspect_h': json.dumps(self.attrs['read_aspect_h']),
                 'read_aspect_w': json.dumps(self.attrs['read_aspect_w']),
             })
