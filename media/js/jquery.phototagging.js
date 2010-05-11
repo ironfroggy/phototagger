@@ -236,7 +236,7 @@
 
         function get_clip() {
             var clip = img.css('clip');
-            var values = clip.match(/\d+/g);
+            var values = clip.match(/\d+\.?\d*/g);
             return {
                 'top': values[0],
                 'right': values[1],
@@ -254,11 +254,15 @@
             var clip = get_clip();
 
             if (dimension == 'height') {
-                var original = img[0].naturalHeight || parseInt(img.attr('data-real-height'));
-                var fixed = desired / ( (clip.bottom - clip.top) / original );
+                var original = parseInt(img.attr('data-height'));
+                var fixed = desired / ( Math.abs(clip.bottom - clip.top) / original );
+                clip.top = clip.top * (fixed / original);
+                clip.bottom = clip.bottom * (fixed / original);
             } else {
-                var original = img[0].naturalWidth || parseInt(img.attr('data-real-width'));
-                var fixed = desired / ( (clip.right - clip.left) / original );
+                var original = parseInt(img.attr('data-width'));
+                var fixed = desired / ( Math.abs(clip.right - clip.left) / original );
+                clip.left = clip.left * (fixed / original);
+                clip.right = clip.right * (fixed / original);
             }
 
             // Under some conditions, changing width/height changes the other
