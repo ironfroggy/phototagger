@@ -284,8 +284,8 @@
         var pos = img.position();
         var clip = get_clip();
 
-        pos.top = - clip.top;
-        pos.left = - clip.left;
+        pos.top = (pos.top || 0) - clip.top;
+        pos.left = (pos.left || 0) - clip.left;
         img.css({
             top: pos.top + 'px',
             left: pos.left + 'px'

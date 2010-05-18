@@ -18,7 +18,7 @@ class PhotoBox(models.Model):
     def __unicode__(self):
         return self.render_img('auto')
 
-    def render_img(self, width=None, height=None, extra=''):
+    def render_img(self, width=None, height=None, extra='', offset=(0, 0)):
         if height is None and width is None:
             height = self.height
             width = self.width
@@ -46,12 +46,14 @@ class PhotoBox(models.Model):
         top = self.y * y_scale
         left = self.x * x_scale
 
-        return mark_safe('''<img src="%(src)s" style="position: absolute; %(hw)s clip:rect(%(top)dpx %(right)dpx %(bottom)dpx %(left)dpx);" class="clipexpand" data-width="%(real_w)d" data-height="%(real_h)d" %(extra)s />''' % {
+        return mark_safe('''<img src="%(src)s" style="left: %(offset_left)dpx; top: %(offset_top)dpx; position: absolute; %(hw)s clip:rect(%(top)dpx %(right)dpx %(bottom)dpx %(left)dpx);" class="clipexpand" data-width="%(real_w)d" data-height="%(real_h)d" %(extra)s />''' % {
             'src': self.photo.image.url,
             'top': top,
             'right': right,
             'bottom': bottom,
             'left': left,
+            'offset_top': offset[0],
+            'offset_left': offset[1],
             'hw': hw,
             'real_h': real_h,
             'real_w': real_w,
