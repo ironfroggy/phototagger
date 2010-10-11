@@ -46,8 +46,13 @@ class PhotoBox(models.Model):
         top = self.y * y_scale
         left = self.x * x_scale
 
+        if real_w * real_h > 500 * 500:
+            url = self.photo.get_display_url()
+        else:
+            url = self.photo.image.url
+
         return mark_safe('''<img src="%(src)s" style="left: %(offset_left)dpx; top: %(offset_top)dpx; position: absolute; %(hw)s clip:rect(%(top)dpx %(right)dpx %(bottom)dpx %(left)dpx);" class="clipexpand" data-width="%(real_w)d" data-height="%(real_h)d" %(extra)s />''' % {
-            'src': self.photo.image.url,
+            'src': url,
             'top': top,
             'right': right,
             'bottom': bottom,
