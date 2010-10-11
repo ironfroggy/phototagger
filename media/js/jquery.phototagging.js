@@ -271,9 +271,9 @@
             (dimension == 'width' && img.css('height', other_original)) || img.css('width', other_original)
 
             if (dimension == 'height') {
-                clip.bottom = parseInt(clip.top) + parseInt(desired);
+                clip.bottom = parseFloat(clip.top) + parseFloat(desired);
             } else {
-                clip.right = parseInt(clip.left) + parseInt(desired);
+                clip.right = parseFloat(clip.left) + parseFloat(desired);
             }
             set_clip(clip);
         }
