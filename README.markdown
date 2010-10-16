@@ -8,6 +8,30 @@ This application provides two related features. The first feature is designed
 to tag users in photos. The second is to crop photos for display in controlled
 layouts. These will probably be split into two applications soon.
 
+Photo Cropping In-place
+-----------------------
+
+There are times when we want to clip an image on the browser, but we also need to specify the placement and size of the resulting photo. The CSS clip property only hides what is outside the clip, but the whole image still takes up its space.
+
+The jquery.clipexpand.js plugin, included as part of this project, takes the clip property of the image and expands that region to fill the entire space the image layout uses.
+
+For example:
+
+    ---------------
+    |             |
+    | whole image |
+    |             |
+    |      -------|
+    |      |      |
+    |      | clip |
+    ---------------
+
+In this example, the region named "clip" will be moved up and right the entire image resized so that the visible clipped region fills the entire space in the layout the original image would have taken, before the clip.
+
+Using it is as simple as calling clipexpand() on the image element:
+
+    $('.clipexpand').clipexpand();
+
 Photo Cropping
 --------------
 
